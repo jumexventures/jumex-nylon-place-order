@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 10px lime, 0 0 20px cyan;
+        }
+        .order-box {
+            font-size: 20px;
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid white;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+        }
+        .button {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: lime;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎉 Your Order Have Been Submitted Successfully! 🎉</h1>
+<p>Thank you for patronizing Jumex Ventures.</p>
+
+<h2>Order Summary</h2>
+<div class="order-box">
+    <p><strong>Name:</strong> <span id="orderName"></span></p>
+    <p><strong>WhatsApp:</strong> <span id="orderPhone"></span></p>
+    <p><strong>Address:</strong> <span id="orderAddress"></span></p>
+    <p><strong>Urgency:</strong> <span id="orderUrgency"></span></p>
+    <p><strong>Nylons:</strong> <span id="orderNylons"></span></p>
+    <p><strong>Other Details:</strong> <span id="orderOtherDetails"></span></p>
+</div>
+
+<p>Click the Confirm Order button below 👇 👇 👇 to complete your order request</p>
+
+<button class="button" onclick="confirmOrder()">✅ Confirm Order</button>
+<button class="button" style="background-color: red; color: white;" id="newOrderBtn">🛒 Place New Order</button>
+
+<footer>
+    <h2 style="margin-top: 20px; margin-bottom: 20px; font-weight: bold;">Jumex Ventures - Quality Nylons, Reliable Service</h2>
+</footer>
+
+<footer>
+    <h2 style="margin-top: 20px; margin-bottom: 20px; font-weight: bold;">Thanks for choosing Jumex ventures</h2>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let orderDetails = JSON.parse(sessionStorage.getItem("orderDetails"));
+  let orderTimestamp = sessionStorage.getItem("orderTimestamp");
+  if (!orderDetails || !orderTimestamp || Date.now() - orderTimestamp > 120000) {
+    sessionStorage.removeItem("orderDetails");
+    sessionStorage.removeItem("orderTimestamp");
+    alert("No placed order found or order has expired. Press OK to place a new order.");
+    window.location.href = "index.html";
+    return;
+  }
+  // Display Order Details
+  document.getElementById("orderName").textContent = orderDetails.name || "No name provided";
+  document.getElementById("orderPhone").textContent = orderDetails.phone || "No phone provided";
+  document.getElementById("orderAddress").textContent = orderDetails.address || "No address provided";
+  document.getElementById("orderUrgency").textContent = orderDetails.urgency || "Not specified";
+  document.getElementById("orderNylons").innerHTML = orderDetails.nylonDetails.length > 0 ? orderDetails.nylonDetails.join("<br>") : "No nylons selected";
+  document.getElementById("orderOtherDetails").textContent = orderDetails.otherDetails.trim() !== "" ? orderDetails.otherDetails : "No additional details provided";
+  // "Place New Order" Button
+  document.getElementById("newOrderBtn").addEventListener("click", placeNewOrder);
+});
+
+function placeNewOrder() {
+  sessionStorage.clear(); 
+  window.location.href = "index.html"; 
+}
+
+function confirmOrder() {
+  let orderDetails = JSON.parse(sessionStorage.getItem("orderDetails"));
+  if (!orderDetails) {
+    alert("Error: No order details found.");
+    return;
+  }
+  try {
+    let message = `🛍 Order Details:\n`;
+    message += `🔹 Name: ${orderDetails.name}\n`;
+    message += `🔹 Phone: ${orderDetails.phone}\n`;
+    message += `🔹 Address: ${orderDetails.address}\n`;
+    message += `🔹 Urgency: ${orderDetails.urgency}\n`;
+    message += `🔹 Nylons: ${orderDetails.nylonDetails.length > 0 ? orderDetails.nylonDetails.join(", ") : "N/A"}\n`;
+    message += `🔹 Other Details: ${orderDetails.otherDetails ? orderDetails.otherDetails : "None"}\n`;
+    let receiverNumber = "+2348039285527";
+    let whatsappLink = `https://wa.me/${receiverNumber}?text=${encodeURIComponent(message)}`;
+    let newTab = window.open(whatsappLink, "_blank");
+    if (!newTab || newTab.closed) {
+      // WhatsApp is not available, display alternative method
+      let fallbackMethod = prompt("WhatsApp is not installed or not working. Choose another method:\n1. Email\n2. SMS");
+      if (fallbackMethod === "1") {
+        let emailSubject = "New Order Received";
+        let emailLink = `mailto:inumidungrace02@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(message)}`;
+        window.location.href = emailLink;
+      } else if (fallbackMethod === "2") {
+        let smsLink = `sms:${receiverNumber}?body=${encodeURIComponent(message)}`;
+        window.location.href = smsLink;
+      } else {
+        alert("No alternative method selected.");
+      }
+    } else {
+      // WhatsApp is available, hide alternative method
+      setTimeout(() => {
+        if (newTab.closed) {
+          alert("Kindly complete your order request through WhatsApp !");
+          setTimeout(() => {
+            sessionStorage.removeItem("orderDetails");
+            sessionStorage.removeItem("orderTimestamp");
+            console.log("Order data cleared after 2 minutes.");
+            window.location.href = "index.html";
+          }, 120000);
+        }
+      }, 1500);
+    }
+  } catch (error) {
+    console.error("Error confirming order:", error);
+    alert("An error occurred while confirming your order. Please try again.");
+  }
+}
+</script>
+
+</body>
+</html>
