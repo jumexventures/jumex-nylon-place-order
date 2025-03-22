@@ -132,11 +132,11 @@ input[type="text"] {
 }
 
 .seller-image {
-    width: 180px; 
-    height: 500px; 
-    border-radius: 10px; 
-    object-fit: contain; 
-    border: 4px solid #00ff00; 
+    width: 150px;  /* Reduce width */
+    height: auto;  /* Maintain aspect ratio */
+    border-radius: 10px;
+    object-fit: cover; /* Ensures a better fit */
+    border: 4px solid #00ff00;
 }
 
 .seller-info img:hover {
@@ -311,6 +311,7 @@ input[type="text"] {
     <img src="images/handless-black.jpg" alt="Handless Black(Kolowo Black) Nylon">
     <label>
       <input type="checkbox" value="Handless Black(Kolowo Black) Nylon">
+      <span>Handless Black Nylon(Kolowo Black)</span>
     </label>
   </div>
   <p>For smaller and lighter products</p>
@@ -476,7 +477,7 @@ input[type="text"] {
 
  <script>
     let slideIndex = 0;
-    const images = ["./nylon1.jpg", "./nylon2.jpg", "./nylon3.jpg", "./nylon4.jpg", "./nylon5.jpg", "./nylon6.jpg", "./nylon7.jpg", "./nylon 8.jpg"];
+    const images = ["./nylon1.jpg", "./nylon2.jpg", "./nylon3.jpg", "./nylon4.jpg", "./nylon5.jpg", "./nylon6.jpg", "./nylon7.jpg", "./nylon8.jpg"];
 
     function changeSlide() {
         slideIndex = (slideIndex + 1) % images.length;
