@@ -131,16 +131,16 @@ input[type="text"] {
 }
 
 .seller-image {
-  max-width: 150px; /* Ensures the image doesn't grow too big */
-  width: 100%; /* Adjusts to the container but doesn't exceed max-width */
-  height: auto;
+  max-width: 150px; /* Ensures it doesn't exceed 150px */
+  width: 100%; /* Adapts to container but never bigger than max-width */
+  height: auto; /* Keeps aspect ratio */
   border-radius: 10px;
   object-fit: cover;
   border: 4px solid #00ff00;
   display: block;
   margin: 0 auto;
 }
-            
+    
 .seller-image:hover {
     transform: scale(1.05); /* Slight increase instead of too much zoom */
     box-shadow: 0px 0px 15px rgba(0, 255, 0, 1);
